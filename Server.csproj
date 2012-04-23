@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5559E66A-91C7-4D38-8245-1436172FAF84}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Server</RootNamespace>
+    <AssemblyName>Server</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Game\GameLoop.cs" />
+    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\GameWorld.cs" />
+    <Compile Include="Game\ServerInstance.cs" />
+    <Compile Include="Packets\PacketType.cs" />
+    <Compile Include="Packets\DataPacket.cs" />
+    <Compile Include="Sockets\SocketClient.cs" />
+    <Compile Include="Sockets\SocketClientWS.cs" />
+    <Compile Include="Sockets\SocketExtension.cs" />
+    <Compile Include="Sockets\SocketServer.cs" />
+    <Compile Include="Chat\ChatRoom Packets.cs" />
+    <Compile Include="Chat\ChatRoom Publisher.cs" />
+    <Compile Include="Chat\ChatRoom.cs" />
+    <Compile Include="Game\User.cs" />
+    <Compile Include="Packets\Publisher.cs" />
+    <Compile Include="Game\Packets\Launcher.cs" />
+    <Compile Include="Utils\Log.cs" />
+    <Compile Include="Protocols\Data\DataProtocol.cs" />
+    <Compile Include="Protocols\Data\DataProtocolJSON.cs" />
+    <Compile Include="Protocols\Data\DataType.cs" />
+    <Compile Include="Protocols\Data\DataTypeJSON.cs" />
+    <Compile Include="Protocols\Transport\TransportProtocol.cs" />
+    <Compile Include="Protocols\Transport\TransportProtocolWS.cs" />
+    <Compile Include="Protocols\Transport\WebSocketHandshake Versions.cs" />
+    <Compile Include="Protocols\Transport\WebSocketHandshake.cs" />
+    <Compile Include="Game\Client Extension.cs" />
+    <Compile Include="Game\Server Extension.cs" />
+    <Compile Include="Game\Packets\User.cs" />
+    <Compile Include="Game\UserInput.cs" />
+    <Compile Include="Game\Packets\Character.cs" />
+    <Compile Include="Game\StateCollection.cs" />
+    <Compile Include="Game\GameObjects\Character.cs" />
+    <Compile Include="Game\GameObjects\Weapons.cs" />
+    <Compile Include="Game\Packets\Weapons.cs" />
+    <Compile Include="Game\GameObjects\Grenade.cs" />
+    <Compile Include="Game\Packets\Grenade.cs" />
+    <Compile Include="Game\Packets\Emotions.cs" />
+    <Compile Include="Utils\Time.cs" />
+    <Compile Include="Utils\Random.cs" />
+    <Compile Include="Game\GameData.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy FileWidth="120" TabWidth="2" NoTabsAfterNonTabs="True" RemoveTrailingWhitespace="True" inheritsSet="Mono" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" NamespaceBraceStyle="EndOfLine" ClassBraceStyle="EndOfLine" InterfaceBraceStyle="EndOfLine" StructBraceStyle="EndOfLine" EnumBraceStyle="EndOfLine" MethodBraceStyle="EndOfLine" AnonymousMethodBraceStyle="DoNotChange" ConstructorBraceStyle="EndOfLine" DestructorBraceStyle="EndOfLine" PropertyGetBraceStyle="DoNotChange" PropertySetBraceStyle="DoNotChange" EventAddBraceStyle="DoNotChange" EventRemoveBraceStyle="DoNotChange" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" IfParentheses="False" WhileParentheses="False" ForParentheses="False" ForeachParentheses="False" CatchParentheses="False" SwitchParentheses="False" LockParentheses="False" UsingParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" TabWidth="4" inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Game\" />
+    <Folder Include="Packets\" />
+    <Folder Include="Sockets\" />
+    <Folder Include="Chat\" />
+    <Folder Include="Game\Packets\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Protocols\" />
+    <Folder Include="Game\GameObjects\" />
+  </ItemGroup>
+</Project>

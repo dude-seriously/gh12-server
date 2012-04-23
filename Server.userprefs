@@ -1,0 +1,63 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Game\GameLoop.cs">
+    <Files>
+      <File FileName="Sockets\SocketClientWS.cs" Line="187" Column="5" />
+      <File FileName="Protocols\Transport\TransportProtocolWS.cs" Line="171" Column="2" />
+      <File FileName="Protocols\Transport\WebSocketHandshake Versions.cs" Line="121" Column="5" />
+      <File FileName="Game\GameObject.cs" Line="90" Column="5" />
+      <File FileName="Protocols\Transport\WebSocketHandshake.cs" Line="25" Column="42" />
+      <File FileName="Protocols\Data\DataTypeJSON.cs" Line="117" Column="37" />
+      <File FileName="Protocols\Data\DataType.cs" Line="1" Column="1" />
+      <File FileName="Game\GameLoop.cs" Line="165" Column="43" />
+      <File FileName="Game\GameObjects\Character.cs" Line="42" Column="26" />
+      <File FileName="Game\GameData.cs" Line="1" Column="1" />
+      <File FileName="Game\Packets\Character.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Server" expanded="True">
+            <Node name="Game" expanded="True">
+              <Node name="GameObjects" expanded="True" />
+              <Node name="Packets" expanded="True" />
+              <Node name="Client Extension.cs" selected="True" />
+            </Node>
+            <Node name="Packets" expanded="True" />
+            <Node name="Protocols" expanded="True">
+              <Node name="Data" expanded="True" />
+              <Node name="Transport" expanded="True" />
+            </Node>
+            <Node name="Sockets" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True">
+          <Node name="Server" expanded="True">
+            <Node name="Server" expanded="True">
+              <Node name="Game" expanded="True" selected="True">
+                <Node name="Packets" expanded="True" />
+              </Node>
+              <Node name="Sockets" expanded="True">
+                <Node name="Client" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="SocketClient.cs" line="89" offsetX="474" offsetY="1320" expression="ex" liveUpdate="False" />
+    <Watch file="Packet.cs" line="18" offsetX="394" offsetY="255" expression="types" liveUpdate="False" />
+    <Watch file="DataTypeJSON.cs" line="171" offsetX="338" offsetY="2550" expression="data" liveUpdate="False" />
+    <Watch file="Main.cs" line="16" offsetX="638" offsetY="204" expression="time" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>
