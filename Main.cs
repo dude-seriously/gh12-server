@@ -6,14 +6,14 @@ using System.Text;
 using Server.Game;
 
 namespace Server {
-	class MainClass {
-		public static void Main(string[] args) {
+    class MainClass {
+        public static void Main(string[] args) {
 
-			ServerInstance server = new ServerInstance();
+            ServerInstance server = new ServerInstance();
 
-			while(true) {
-				Thread.Sleep(10);
-			}
-		}
-	}
+            while(true) {
+                Thread.Sleep(10);
+            }
+        }
+    }
 }
