@@ -34,7 +34,6 @@ namespace Server.Sockets.Server {
                         this.socket.BeginAccept(null, 0, OnAccept, null);
                         
                         this.RunCheckTimedOutConnections();
-                        //this.RunPublishStats();
                         
                         Log.Add("server listening");
                     }

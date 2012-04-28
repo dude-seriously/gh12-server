@@ -42,7 +42,9 @@ namespace Server.Game {
 		}
 
 		public void AddPacket(DataPacket packet) {
-			this.packets.Add(packet);
+			if (packet != null) {
+				this.packets.Add(packet);
+			}
 		}
 
 		public DataPacket[] GrabPackets() {
@@ -51,11 +53,5 @@ namespace Server.Game {
 			this.packets.Clear();
 			return packets;
 		}
-		/*public void ClearPackets() {
-			this.packets.Clear();
-		}
-		public ICollection<DataPacket> Packets {
-			get { return this.packets; }
-		}*/
 	}
 }

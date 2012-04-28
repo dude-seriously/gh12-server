@@ -19,7 +19,7 @@ namespace Server.Sockets.Client {
 					this.user.States["new"] = true;
 				}
 
-				DataPacket packet = PacketFactory.Make("userSet");
+				DataPacket packet = PacketFactory.Make("userOwn");
 				if(packet != null) {
 					if(user != null) {
 						packet["id"] = user.ID;

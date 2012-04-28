@@ -4,14 +4,21 @@ using Server.Sockets.Client;
 using Server.Sockets.Server;
 
 namespace Server.Game.Packets {
-	[APacket("userSet")]
-	public class PacketUserSet : PacketType {
-		static private PacketType instance = new PacketUserSet();
+	[APacket("userOwn")]
+	public class PacketUserOwn : PacketType {
+		static private PacketType instance = new PacketUserOwn();
 
-		private PacketUserSet() {
+		private PacketUserOwn() {
 			this.AddField("id", "int");
 		}
 	}
+    
+     [APacket("userStart")]
+     public class PacketUserStart : PacketType {
+         static private PacketType instance = new PacketUserStart();
+    
+         private PacketUserStart() { }
+     }
 
 	[APacket("userAdd")]
 	public class PacketUserAdd : PacketType {
@@ -20,8 +27,6 @@ namespace Server.Game.Packets {
 		private PacketUserAdd() {
 			this.AddField("id", "int");
 			this.AddField("n", "string");
-			this.AddField("k", "int");
-			this.AddField("d", "int");
 			this.AddField("l", "short");
 		}
 	}
@@ -66,10 +71,8 @@ namespace Server.Game.Packets {
 
 		private PacketUserUpdate() {
 			this.AddField("id", "int");
-			this.AddField("n", "string");
-			this.AddField("k", "int");
-			this.AddField("d", "int");
-			this.AddField("l", "short");
+            this.AddField("n", "string");
+            this.AddField("l", "short");
 		}
 	}
 }

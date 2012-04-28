@@ -50,6 +50,21 @@ namespace Server.Packets {
                 return null;
             }
         }
+
+        static public DataPacket Make(string name, params object[] list) {
+            PacketType packetType = Get(name);
+            if(packetType != null) {
+                DataPacket packet = new DataPacket(packetType);
+                if(list != null && list.Length > 0) {
+                    for(int i = 0; i < list.Length / 2; ++i) {
+                        packet[(string)list[i * 2]] = list[i * 2 + 1];
+                    }
+                }
+                return packet;
+            } else {
+                return null;
+            }
+        }
     }
 
     sealed class APacket : Attribute {

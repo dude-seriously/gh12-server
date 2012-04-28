@@ -25,11 +25,7 @@ namespace Server.Sockets.Client {
         public override bool Start() {
             bool success = this.Handshake();
             if(success) {
-                DataPacket packet = PacketFactory.Make("launcherWelcome");
-                if(packet != null) {
-                    packet["message"] = "Welcome to MOLYJAM!";
-                    this.Send(packet);
-                }
+                this.SendAsync(PacketFactory.Make("welcome", "message", "Welcome to GameHack!"));
 
                 this.buffer = new byte[2];
                 this.StartReceive();
@@ -270,26 +266,36 @@ namespace Server.Sockets.Client {
                 dataPacket.TriggerEvents(this);
             }
         }
-
+  
+        public override void SendAsync(DataPacket packet) {
+            ThreadPool.QueueUserWorkItem(new WaitCallback(SendAsync), packet);
+        }
+        
+        private void SendAsync(object data) {
+            this.Send((DataPacket)data);
+        }
+        
         public override void Send(DataPacket packet) {
             try {
-                byte[] data = DataProtocol.Get("json").Write(packet);
-
-                byte[] binary = this.transportProtocol.Send(data);
-
-                SocketError error = SocketError.Fault;
-                int send = 0;
-
-                bool stop = false;
-                lock(this.locker) {
-                    if(this.socket != null && this.socket.Connected) {
-                        send = this.socket.Send(binary, 0, binary.Length, SocketFlags.None, out error);
-                    } else {
-                        stop = true;
+                if (packet != null) {
+                    byte[] data = DataProtocol.Get("json").Write(packet);
+    
+                    byte[] binary = this.transportProtocol.Send(data);
+    
+                    SocketError error = SocketError.Fault;
+                    int send = 0;
+    
+                    bool stop = false;
+                    lock(this.locker) {
+                        if(this.socket != null && this.socket.Connected) {
+                            send = this.socket.Send(binary, 0, binary.Length, SocketFlags.None, out error);
+                        } else {
+                            stop = true;
+                        }
                     }
-                }
-                if(stop || error != SocketError.Success || send != binary.Length) {
-                    this.Stop();
+                    if(stop || error != SocketError.Success || send != binary.Length) {
+                        this.Stop();
+                    }
                 }
             } catch(SocketException exception) {
                 Log.Add("client[" + this.id + "] Send exception: " + exception.ToString());

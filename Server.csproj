@@ -67,21 +67,18 @@
     <Compile Include="Game\Packets\Character.cs" />
     <Compile Include="Game\StateCollection.cs" />
     <Compile Include="Game\GameObjects\Character.cs" />
-    <Compile Include="Game\GameObjects\Weapons.cs" />
-    <Compile Include="Game\Packets\Weapons.cs" />
-    <Compile Include="Game\GameObjects\Grenade.cs" />
-    <Compile Include="Game\Packets\Grenade.cs" />
-    <Compile Include="Game\Packets\Emotions.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\Random.cs" />
     <Compile Include="Game\GameData.cs" />
+    <Compile Include="Game\Map.cs" />
+    <Compile Include="Game\Packets\Map.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
         <Policies>
-          <TextStylePolicy FileWidth="120" TabWidth="2" NoTabsAfterNonTabs="True" RemoveTrailingWhitespace="True" inheritsSet="Mono" inheritsScope="text/plain" scope="text/x-csharp" />
+          <TextStylePolicy FileWidth="120" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
           <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" NamespaceBraceStyle="EndOfLine" ClassBraceStyle="EndOfLine" InterfaceBraceStyle="EndOfLine" StructBraceStyle="EndOfLine" EnumBraceStyle="EndOfLine" MethodBraceStyle="EndOfLine" AnonymousMethodBraceStyle="DoNotChange" ConstructorBraceStyle="EndOfLine" DestructorBraceStyle="EndOfLine" PropertyGetBraceStyle="DoNotChange" PropertySetBraceStyle="DoNotChange" EventAddBraceStyle="DoNotChange" EventRemoveBraceStyle="DoNotChange" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" IfParentheses="False" WhileParentheses="False" ForParentheses="False" ForeachParentheses="False" CatchParentheses="False" SwitchParentheses="False" LockParentheses="False" UsingParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
           <TextStylePolicy FileWidth="120" TabWidth="4" inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" />
         </Policies>

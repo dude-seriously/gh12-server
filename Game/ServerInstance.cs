@@ -13,6 +13,13 @@ namespace Server.Game {
 
 			this.game = new GameLoop();
 			this.game.World = new GameWorld();
+            this.game.Map = new Map(64, 64);
+            
+            for(int y = 0; y < this.game.Map.Height; ++y) {
+                for(int x = 0; x < this.game.Map.Width; ++x) {
+                    this.game.Map.Cell(x, y).Type = Rand.Next(0, 2);
+                }
+            }
 
 			this.game.CycleEnd += (packets) => this.server.PublishAsync(packets);
 
@@ -24,4 +31,3 @@ namespace Server.Game {
 		}
 	}
 }
-

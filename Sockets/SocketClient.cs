@@ -29,7 +29,8 @@ namespace Server.Sockets.Client {
         protected bool stopped;
 
         public abstract byte[] Receive(int length);
-
+  
+        public abstract void SendAsync(DataPacket packet);
         public abstract void Send(DataPacket packet);
 
         protected bool pong = false;
