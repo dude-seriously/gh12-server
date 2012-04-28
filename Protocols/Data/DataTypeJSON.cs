@@ -5,93 +5,283 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace Server.Protocols.Data {
-    sealed class PacketDataTypes {
-        static private volatile PacketDataTypes instance = new PacketDataTypes();
-        private Dictionary<string, PacketDataType> container;
+	[APacketDataTypeParser("bool", "json")]
+	public sealed class PacketDataTypeParserBoolJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserBoolJSON();
 
-        private PacketDataTypes() {
-            this.container = new Dictionary<string, PacketDataType>();
+		private PacketDataTypeParserBoolJSON() { }
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            IEnumerable<Type> types = assembly.GetTypes().Where(c => c.GetInterface(typeof(IPacketDataTypeParser).Name) != null && c.GetCustomAttributes(typeof(APacketDataTypeParser), false).Length == 1);
-            foreach(Type type in types) {
-                APacketDataTypeParser attribute = (APacketDataTypeParser)(type.GetCustomAttributes(typeof(APacketDataTypeParser), false)[0]);
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				if (((string)data[0]) == "true") {
+					return @"true";
+				}
+			}
+			return @"false";
+		}
 
-                PacketDataType dataType = null;
-                if(!container.ContainsKey(attribute.DataType)) {
-                    dataType = new PacketDataType(attribute.DataType);
-                    this.container.Add(attribute.DataType, dataType);
-                } else {
-                    dataType = this.container[attribute.DataType];
-                }
+		public object Write(object data) {
+			return ((bool)data) ? @"true" : @"false";
+		}
+	}
 
-                FieldInfo instanceField = type.GetField("instance", BindingFlags.NonPublic | BindingFlags.Static);
-                if(instanceField != null) {
-                    dataType.AddParser(attribute.Protocol, (IPacketDataTypeParser)instanceField.GetValue(null));
-                }
-            }
-        }
+	[APacketDataTypeParser("sbyte", "json")]
+	public sealed class PacketDataTypeParserSByteJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserSByteJSON();
 
-        static public PacketDataType Get(string name) {
-            if(instance.container.ContainsKey(name)) {
-                return instance.container[name];
-            } else {
-                return null;
-            }
-        }
-    }
+		private PacketDataTypeParserSByteJSON() { }
 
-    public sealed class PacketDataType {
-        private string name;
-        private Dictionary<string, IPacketDataTypeParser> container;
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				sbyte result = 0;
 
-        public PacketDataType(string name) {
-            this.name = name;
-            this.container = new Dictionary<string, IPacketDataTypeParser>();
-        }
+				if (sbyte.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
 
-        public void AddParser(string protocol, IPacketDataTypeParser parser) {
-            if(!this.container.ContainsKey(protocol)) {
-                this.container.Add(protocol, parser);
-            } else {
+		public object Write(object data) {
+			return ((sbyte)data).ToString();
+		}
+	}
 
-            }
-        }
+	[APacketDataTypeParser("byte", "json")]
+	public sealed class PacketDataTypeParserByteJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserByteJSON();
 
-        public IPacketDataTypeParser GetParser(string protocol) {
-            if(this.container.ContainsKey(protocol)) {
-                return this.container[protocol];
-            } else {
-                return null;
-            }
-        }
+		private PacketDataTypeParserByteJSON() { }
 
-        public string Name {
-            get { return this.name; }
-        }
-    }
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				byte result = 0;
 
-    public interface IPacketDataTypeParser {
-        object Read(params object[] data);
+				if (byte.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
 
-        object Write(object data);
-    }
+		public object Write(object data) {
+			return ((byte)data).ToString();
+		}
+	}
 
-    public sealed class APacketDataTypeParser : Attribute {
-        private string dataType;
-        private string protocol;
+	[APacketDataTypeParser("short", "json")]
+	public sealed class PacketDataTypeParserShortJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserShortJSON();
 
-        public APacketDataTypeParser(string dataType, string protocol) {
-            this.dataType = dataType;
-            this.protocol = protocol;
-        }
+		private PacketDataTypeParserShortJSON() { }
 
-        public string DataType {
-            get { return this.dataType; }
-        }
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				short result = 0;
 
-        public string Protocol {
-            get { return this.protocol; }
-        }
-    }
+				if (short.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((short)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("ushort", "json")]
+	public sealed class PacketDataTypeParserUShortJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserUShortJSON();
+
+		private PacketDataTypeParserUShortJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				ushort result = 0;
+
+				if (ushort.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((ushort)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("int", "json")]
+	public sealed class PacketDataTypeParserIntJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserIntJSON();
+
+		private PacketDataTypeParserIntJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				int result = 0;
+
+				if (int.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((int)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("uint", "json")]
+	public sealed class PacketDataTypeParserUIntJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserUIntJSON();
+
+		private PacketDataTypeParserUIntJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				uint result = 0;
+
+				if (uint.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((uint)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("long", "json")]
+	public sealed class PacketDataTypeParserLongJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserLongJSON();
+
+		private PacketDataTypeParserLongJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				long result = 0;
+
+				if (long.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((long)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("ulong", "json")]
+	public sealed class PacketDataTypeParserULongJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserULongJSON();
+
+		private PacketDataTypeParserULongJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				ulong result = 0;
+
+				if (ulong.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((ulong)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("float", "json")]
+	public sealed class PacketDataTypeParserFloatJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserFloatJSON();
+
+		private PacketDataTypeParserFloatJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				float result = 0;
+
+				if (float.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((float)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("double", "json")]
+	public sealed class PacketDataTypeParserDoubleJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserDoubleJSON();
+
+		private PacketDataTypeParserDoubleJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				double result = 0;
+
+				if (double.TryParse((string)data[0], out result)) {
+					return result;
+				}
+			}
+			return @"0";
+		}
+
+		public object Write(object data) {
+			return ((double)data).ToString();
+		}
+	}
+
+	[APacketDataTypeParser("string", "json")]
+	public sealed class PacketDataTypeParserStringJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserStringJSON();
+
+		private PacketDataTypeParserStringJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				return (string)data[0];
+			}
+			return @"""""";
+		}
+
+		public object Write(object data) {
+			return @"""" + (string)data + @"""";
+		}
+	}
+
+	[APacketDataTypeParser("timespan", "json")]
+	public sealed class PacketDataTypeParserTimeSpanJSON : IPacketDataTypeParser {
+		static private IPacketDataTypeParser instance = new PacketDataTypeParserTimeSpanJSON();
+
+		private PacketDataTypeParserTimeSpanJSON() { }
+
+		public object Read(params object[] data) {
+			if (data.Length == 1 && data[0] != null) {
+				long ticks;
+
+				if (long.TryParse((string)data[0], out ticks)) {
+					return new TimeSpan(ticks);
+				}
+			}
+			return null;
+		}
+
+		public object Write(object data) {
+			return ((TimeSpan)data).Ticks.ToString();
+		}
+	}
 }

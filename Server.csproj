@@ -48,9 +48,6 @@
     <Compile Include="Sockets\SocketClientWS.cs" />
     <Compile Include="Sockets\SocketExtension.cs" />
     <Compile Include="Sockets\SocketServer.cs" />
-    <Compile Include="Chat\ChatRoom Packets.cs" />
-    <Compile Include="Chat\ChatRoom Publisher.cs" />
-    <Compile Include="Chat\ChatRoom.cs" />
     <Compile Include="Game\User.cs" />
     <Compile Include="Packets\Publisher.cs" />
     <Compile Include="Game\Packets\Launcher.cs" />
@@ -95,7 +92,6 @@
     <Folder Include="Game\" />
     <Folder Include="Packets\" />
     <Folder Include="Sockets\" />
-    <Folder Include="Chat\" />
     <Folder Include="Game\Packets\" />
     <Folder Include="Utils\" />
     <Folder Include="Protocols\" />
