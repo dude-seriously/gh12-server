@@ -28,6 +28,7 @@ namespace Server.Game.Packets {
 			this.AddField("id", "int");
 			this.AddField("n", "string");
 			this.AddField("l", "short");
+            this.AddField("s", "int");
 		}
 	}
 
@@ -60,7 +61,6 @@ namespace Server.Game.Packets {
 		public void Process(SocketClient client, DataPacket packet) {
 			if(client.User != null) {
 				client.User.Name = packet["n"].ToString();
-				Log.Add(packet["n"].ToString());
 			}
 		}
 	}
@@ -73,6 +73,7 @@ namespace Server.Game.Packets {
 			this.AddField("id", "int");
             this.AddField("n", "string");
             this.AddField("l", "short");
+            this.AddField("s", "int");
 		}
 	}
 }

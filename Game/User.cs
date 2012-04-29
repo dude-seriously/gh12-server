@@ -19,6 +19,9 @@ namespace Server.Game {
 
 		private DString name;
 		private DShort latency;
+        private DInt score;
+        
+        public long lastSpawn;
 
 		private SocketClient client;
 
@@ -27,8 +30,9 @@ namespace Server.Game {
 			this.world = world;
 			this.states = new StateCollection();
 			this.input = new ConcurrentQueue<UserInput>();
-			this.character = new Character();
-			this.character.Owner = this;
+			this.character = new Character(this);
+            this.world.AddObject(this.character);
+            this.score = new DInt(20);
             
 			this.name = new DString(name);
 			this.latency = new DShort(-1);
@@ -64,6 +68,16 @@ namespace Server.Game {
 			}
 			get { return this.latency.Value; }
 		}
+        
+        public int Score {
+             set {
+                 if(!this.score.Value.Equals(value)) {
+                     this.updated = true;
+                     this.score.Value = value;
+                 }
+             }
+             get { return this.score.Value; }
+         }
 
 		public DataPacket PacketUpdate {
 			get {
@@ -84,6 +98,11 @@ namespace Server.Game {
 							this.latency.Updated = false;
 							packet["l"] = this.latency.Value;
 						}
+                        
+                        if(this.score.Updated) {
+                             this.score.Updated = false;
+                             packet["s"] = this.score.Value;
+                         }
 
 						return packet;
 					} else {
@@ -101,6 +120,7 @@ namespace Server.Game {
 
 		public void Remove() {
 			this.world.RemoveUser(this);
+            this.world.RemoveObject(this.character);
 			this.world = null;
 			this.states = null;
 			this.input = null;

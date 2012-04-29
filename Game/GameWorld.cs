@@ -5,11 +5,14 @@ using Server.Packets;
 
 namespace Server.Game {
 	public class GameWorld {
+        public static GameWorld inst;
+        
 		private ConcurrentDictionary<int, User> users;
 		private ConcurrentDictionary<int, GameObject> objects;
 		private List<DataPacket> packets;
 
 		public GameWorld() {
+            inst = this;
 			this.users = new ConcurrentDictionary<int, User>();
 			this.objects = new ConcurrentDictionary<int, GameObject>();
 			this.packets = new List<DataPacket>();

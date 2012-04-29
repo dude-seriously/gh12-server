@@ -1,8 +1,13 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
+using Server.Game.Objects;
+using Server.Packets;
 
 namespace Server.Game {
 	public class Map {
+        public static Map inst;
+        
         private int width;
         private int height;
         private Cell[] cells;
@@ -11,6 +16,7 @@ namespace Server.Game {
         private string array;
         
 		public Map(int width, int height) {
+            inst = this;
             this.width = width;
             this.height = height;
             
@@ -24,7 +30,12 @@ namespace Server.Game {
 		}
         
         public Cell Cell(int x, int y) {
-            return this.cells[y * this.width + x];
+            if (x >= 0 && x < this.width &&
+                y >= 0 && y < this.height) {
+                
+                return this.cells[y * this.width + x];
+            }
+            return null;
         }
         
         public int Width {
@@ -65,6 +76,9 @@ namespace Server.Game {
         private int x;
         private int y;
         
+        private DInt soul;
+        private bool updated;
+        
         private int type;
         
         public Cell(Map map, int x, int y, int type) {
@@ -72,11 +86,79 @@ namespace Server.Game {
             this.x = x;
             this.y = y;
             this.type = type;
+            this.soul = new DInt();
+            this.updated = false;
+        }
+        
+        public int Soul {
+            set {
+                updated = true;
+                this.soul.Value = value;
+            }
+            get { return this.soul.Value; }
         }
         
         public int Type {
             set { this.type = value; }
             get { return this.type; }
+        }
+        
+        public int X {
+            get { return this.x; }
+        }
+        
+        public int Y {
+            get { return this.y; }
+        }
+        
+        public DataPacket PacketFull {
+            get {
+                if (this.soul.Value > 0) {
+                    DataPacket packet = PacketFactory.Make("soulUpdate");
+    
+                    if(packet != null) {
+                        packet["id"] = this.x * map.Height + this.y;
+    
+                        packet["v"] = this.soul.Value;
+                        packet["x"] = this.x;
+                        packet["y"] = this.y;
+             
+                        return packet;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+        
+        public DataPacket PacketUpdate {
+            get {
+                if(this.updated) {
+                    this.updated = false;
+
+                    DataPacket packet = PacketFactory.Make("soulUpdate");
+
+                    if(packet != null) {
+                        packet["id"] = this.x * map.Height + this.y;
+
+                        if(this.soul.Updated) {
+                            this.soul.Updated = false;
+                            packet["v"] = this.soul.Value;
+                        }
+                        
+                        packet["x"] = this.x;
+                        packet["y"] = this.y;
+                        
+                        return packet;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Server.Game {
         private Map map;
 
         public GameLoop() {
-            this.ups = 20;
+            this.ups = 100;
         }
 
         public GameWorld World {
@@ -63,6 +63,7 @@ namespace Server.Game {
             long lastTick = Time.Now;
 
             while(this.running) {
+                Thread.Sleep(1);
                 if(Time.Now - lastTick > this.ups) {
 /* TICK BEGIN */
                     lastTick = Time.Now;
@@ -83,22 +84,41 @@ namespace Server.Game {
         /* NEW */
                             if(user.States["new"] != null && user.States["new"].Equals(true)) {
                                 user.States["new"] = null;
+                                
+                                user.States["sync"] = true;
 
                                 foreach(User iUser in users) {
                                     if(iUser.ID != user.ID && user.Client != null) {
-                                        user.Client.SendAsync(PacketFactory.Make("userAdd", "id", iUser.ID, "n", iUser.Name, "l", iUser.Latency));
+                                        user.Client.SendAsync(PacketFactory.Make("userAdd", "id", iUser.ID, "n", iUser.Name, "l", iUser.Latency, "s", iUser.Score));
                                     }
                                 }
                                 
-                                this.world.AddPacket(PacketFactory.Make("userAdd", "id", user.ID, "n", user.Name, "l", user.Latency));
+                                foreach(GameObject obj in objects) {
+                                    try {
+                                        user.Client.SendAsync(obj.PacketFull);
+                                    } catch(Exception ex) {
+                                        
+                                    }
+                                }
+                                
+                                for(int y = 0; y < map.Height; ++y) {
+                                    for(int x = 0; x < map.Width; ++x) {
+                                        user.Client.SendAsync(map.Cell(x, y).PacketFull);
+                                    }
+                                }
+                                
+                                this.world.AddPacket(PacketFactory.Make("userAdd", "id", user.ID, "n", user.Name, "l", user.Latency, "s", user.Score));
                             }
-                            
+        /* SET NAME */
                             if(user.States["nick"] != null && user.States["nick"].Equals(true)) {
                                 user.States["nick"] = null;
                                 
                                 user.Client.SendAsync(PacketFactory.Make("userStart"));
                                 
                                 user.Client.SendAsync(PacketFactory.Make("mapData", "w", this.map.Width, "h", this.map.Height, "d", this.map.MapArray));
+                                
+                                user.Char.Enabled = true;
+                                user.Char.Cell = map.Cell(Rand.Next(0, map.Width), Rand.Next(0, map.Height));
                             }
                             
 /* PROCESS INPUT */
@@ -106,19 +126,54 @@ namespace Server.Game {
                             
                             while((input = user.GrabInput()) != null) {
                                 switch(input.Name) {
-                                    case "..":
+                                    case "charMove":
+                                        user.Char.Direction = (byte)input["d"];
+                                        break;
+                                    case "mobSpawn":
+                                        if (Time.Now - user.lastSpawn > 1000) {
+                                            user.lastSpawn = Time.Now;
+                                            
+                                            if (user.Score > 0) {
+                                                --user.Score;
+                                                
+                                                Hero hero = new Hero();
+                                                hero.Evil = (user.ID % 2) == 0;
+                                                hero.Cell = this.map.Cell((int)input["x"], (int)input["y"]);
+                                                this.world.AddObject(hero);
+                                                this.world.AddPacket(hero.PacketFull);
+                                            }
+                                        }
                                         break;
                                 }
                             }
                             
 /* PUBLISH USER UPDATE PACKET */
                             this.world.AddPacket(user.PacketUpdate);
+                            //this.world.AddPacket(user.Char.PacketUpdate);
+                        }
+                        
+                        if (user.Client == null) {
+                            user.States["removing"] = true;
                         }
                     }
  
 /* UPDATE ALL OBJECTS */
                     foreach(GameObject obj in objects) {
                         obj.Update();
+                        
+                        if (obj.Deleted) {
+                            obj.Delete();
+                            this.world.AddPacket(obj.PacketRemove);
+                            this.world.RemoveObject(obj);
+                        } else {
+                            this.world.AddPacket(obj.PacketUpdate);
+                        }
+                    }
+                    
+                    for(int y = 0; y < map.Height; ++y) {
+                        for(int x = 0; x < map.Width; ++x) {
+                            this.world.AddPacket(map.Cell(x, y).PacketUpdate);
+                        }
                     }
 
 /* TICK END */

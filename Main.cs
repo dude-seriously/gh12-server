@@ -12,7 +12,7 @@ namespace Server {
             ServerInstance server = new ServerInstance();
 
             while(true) {
-                Thread.Sleep(10);
+                Thread.Sleep(1000);
             }
         }
     }

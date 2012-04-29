@@ -72,6 +72,9 @@
     <Compile Include="Game\GameData.cs" />
     <Compile Include="Game\Map.cs" />
     <Compile Include="Game\Packets\Map.cs" />
+    <Compile Include="Game\Packets\Input.cs" />
+    <Compile Include="Game\GameObjects\Hero.cs" />
+    <Compile Include="Game\Packets\Hero.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

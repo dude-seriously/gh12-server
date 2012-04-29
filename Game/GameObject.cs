@@ -1,17 +1,21 @@
 using System;
+using Server.Packets;
+using Server.Game.Objects;
 
 namespace Server.Game {
 	public class GameObject {
 		private static long time;
 		private static int counter;
-
+        
 		public static long Time {
 			set { time = value; }
 			get { return time; }
 		}
 
 		private int id;
-		public int type;
+        protected bool deleted;
+        protected bool updated;
+        protected int type;
 
 		protected GameObject() {
 			this.id = ++counter;
@@ -20,74 +24,120 @@ namespace Server.Game {
 		public int ID {
 			get { return this.id; }
 		}
-
+  
+        public bool Deleted {
+            get { return this.deleted; }
+        }
+        
+        public int Type {
+            set { this.type = value; }
+            get { return this.type; }
+        }
+        
+        public virtual void Delete() {
+            
+        }
+        
+        public virtual DataPacket PacketFull {
+            get { return null; }
+        }
+        
+        public virtual DataPacket PacketUpdate {
+            get { return null; }
+        }
+        
+        public virtual DataPacket PacketRemove {
+            get { return null; }
+        }
+        
 		public virtual void Update() {
 		}
 	}
 
-	public class GameObjectControlled : GameObject {
-		private User owner;
-
-		protected GameObjectControlled() {
-		}
-
-		public User Owner {
-			set {
-				this.owner = value;
-				/*if (this.owner != value) {
-					if (this.owner != null) {
-						this.owner.RemoveOwnage(this);
-					}
-
-					this.owner = value;
-
-					if (this.owner != null) {
-						this.owner.AddOwnage(this);
-					}
-				}*/
-			}
-			get { return this.owner; }
-		}
-	}
-
-	public class GameObjectMovable : GameObjectControlled {
-		public float x;
-		public float y;
-		private float nX;
-		private float nY;
-		public float speed;
+	public class GameObjectMovable : GameObject {
+        private Cell cell;
+        private Cell target;
+        
+        protected int move;
+        
+        protected DInt speed;
+        protected DInt x;
+        protected DInt y;
 
 		protected GameObjectMovable() {
-		}
-
-		public float X {
-			set { this.x = value; }
-			get { return this.x; }
-		}
-
-		public float Y {
-			set { this.y = value; }
-			get { return this.y; }
-		}
-
-		public void SetDirection(float nX, float nY) {
-			if(nX != 0 || nY != 0) {
-				float length = (float)Math.Sqrt(nX * nX + nY * nY);
-				this.nX = nX / length;
-				this.nY = nY / length;
-			} else {
-				this.nX = 0;
-				this.nY = 0;
-			}
-		}
-
+            this.speed = new DInt();
+            this.x = new DInt();
+            this.y = new DInt();
+        }
+  
+        public override void Delete() {
+            base.Delete();
+            
+            this.cell = null;
+            this.target = null;
+        }
+        
+        public bool IsMoving {
+            get {
+                return this.target != null;
+            }
+        }
+        
+		public Cell Cell {
+            set {
+                if (this.cell != value && value != null) {
+                    this.move = 0;
+                    this.cell = value;
+                    this.updated = true;
+                    this.x.Value = this.cell.X;
+                    this.y.Value = this.cell.Y;
+                }
+            }
+            get { return this.cell; }
+        }
+        
+        public Cell Target {
+            set {
+                if (this.target != value && value != null) {
+                    this.move = 1;
+                    this.target = value;
+                    this.updated = true;
+                    this.x.Value = this.target.X;
+                    this.y.Value = this.target.Y;
+                }
+            }
+            get { return this.target; }
+        }
+        
+        public int Speed {
+            set {
+                if (!this.speed.Value.Equals(value)) {
+                    this.updated = true;
+                    this.speed.Value = value;
+                }
+            }
+            get { return this.speed.Value; }
+        }
+  
+        public int X {
+            get { return this.x.Value; }
+        }
+        
+        public int Y {
+            get { return this.y.Value; }
+        }
+        
 		public override void Update() {
 			base.Update();
 
-			if(this.nX != 0 || this.nY != 0) {
-				this.x += this.nX * speed;
-				this.y += this.nY * speed;
-			}
+            if (this.target != null) {
+                if (this.move <= (int)this.speed.Value) {
+                    ++this.move;
+                } else {
+                    this.cell = this.target;
+                    this.target = null;
+                }
+            }
 		}
 	}
 }

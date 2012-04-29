@@ -63,7 +63,7 @@ namespace Server.Sockets.Client {
                             stop = true;
                         }
                     }
-                    if(stop || error != SocketError.Success || send != binary.Length) {
+                    if(stop || error != SocketError.Success/* || send != binary.Length*/) {
                         this.Stop();
                     }
                 } catch(SocketException exception) {

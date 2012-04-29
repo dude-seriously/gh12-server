@@ -173,7 +173,7 @@ namespace Server.Sockets.Client {
                     }
                 }
 
-                if(!stop && error == SocketError.Success && read == length) {
+                if(!stop && error == SocketError.Success /*&& read == length*/) {
                     return buffer;
                 } else {
                     this.Stop();
@@ -268,11 +268,15 @@ namespace Server.Sockets.Client {
         }
   
         public override void SendAsync(DataPacket packet) {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(SendAsync), packet);
+            if (packet != null) {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(SendAsync), packet);
+            }
         }
         
         private void SendAsync(object data) {
-            this.Send((DataPacket)data);
+            if (data != null) {
+                this.Send((DataPacket)data);
+            }
         }
         
         public override void Send(DataPacket packet) {
@@ -293,7 +297,7 @@ namespace Server.Sockets.Client {
                             stop = true;
                         }
                     }
-                    if(stop || error != SocketError.Success || send != binary.Length) {
+                    if(stop || error != SocketError.Success /*|| send != binary.Length*/) {
                         this.Stop();
                     }
                 }
