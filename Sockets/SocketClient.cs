@@ -1,5 +1,5 @@
 /*
-Sockets.Client
+Server.Sockets.Client.SocketClient
 
 Abstract class for Client Socket implementation.
 */
