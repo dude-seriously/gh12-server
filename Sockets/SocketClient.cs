@@ -1,3 +1,9 @@
+/*
+Sockets.Client
+
+Abstract class for Client Socket implementation.
+*/
+
 using System;
 using System.Net.Sockets;
 using Server.Protocols.Transport;
@@ -63,7 +69,7 @@ namespace Server.Sockets.Client {
                             stop = true;
                         }
                     }
-                    if(stop || error != SocketError.Success/* || send != binary.Length*/) {
+                    if(stop || error != SocketError.Success || send != binary.Length) {
                         this.Stop();
                     }
                 } catch(SocketException exception) {
