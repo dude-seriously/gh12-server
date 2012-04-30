@@ -1,3 +1,10 @@
+/*
+Server.Sockets.Server.SocketServer
+
+Server socket implementation using TCP layer.
+It handles Client Accepting and creating operations as well timeout checks.
+*/
+
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -21,6 +28,9 @@ namespace Server.Sockets.Server {
             inst = this;
         }
         
+        // Start Server
+        // It creates Socket, Binds it and Listens
+        // As well run Accepting for connections
         public void Start() {
             try {
                 lock(locker) {
@@ -43,6 +53,9 @@ namespace Server.Sockets.Server {
             }
         }
         
+        // Event triggers when connection is comming
+        // It creates socket, and for now statically creates it as WebSockets client
+        // As well it creates User instance in World for GameLoop
         private void OnAccept(IAsyncResult result) {
             try {
                 SocketClient client = null;
@@ -81,6 +94,7 @@ namespace Server.Sockets.Server {
             }
         }
         
+        // Stop server
         public void Stop() {
             try {
                 lock(this.locker) {
@@ -114,6 +128,8 @@ namespace Server.Sockets.Server {
             }
         }*/
         
+        // Run pinging routine
+        // It publishes ping message every second
         private void RunCheckTimedOutConnections() {
             ThreadPool.QueueUserWorkItem(new WaitCallback(WorkerTimedOut));
         }
@@ -131,26 +147,32 @@ namespace Server.Sockets.Server {
             }
         }
         
+        // Asynchronous publishing of packet using Thread from Pool
         public void PublishAsync(DataPacket packets) {
             ThreadPool.QueueUserWorkItem(new WaitCallback(PublishCallback), packets);
         }
         
+        // Asynchronous publishing list of packets using Thread from Pool
         public void PublishAsync(ICollection<DataPacket> packets) {
             ThreadPool.QueueUserWorkItem(new WaitCallback(PublishManyCallback), packets);
         }
         
+        // Publish callback
         private void PublishCallback(object data) {
             this.publisher.Publish((DataPacket)data);
         }
         
+        // Publish many callback
         private void PublishManyCallback(object data) {
             this.publisher.Publish((ICollection<DataPacket>)data);
         }
         
+        // Blocking publishing of packet
         public void Publish(DataPacket packet) {
             this.publisher.Publish(packet);
         }
         
+        // Blocking publishing list of packets
         public void Publish(ICollection<DataPacket> packets) {
             this.publisher.Publish(packets);
         }
