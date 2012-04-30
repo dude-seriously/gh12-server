@@ -1,3 +1,15 @@
+/*
+Server.Sockets.Client.ClientWS : SocketClient
+
+Implementation of socket to work with WebSockets protocol.
+This is TCP layer socket implementation with WebSockets layer on top.
+This class handles Handshake operation using TransportProtocol based on clients protocol version.
+As well it handles WebSockets messages framing operations based on DataProtocol. For now data
+protocol is used statically JSON, but Data Protocol layer is implemented that way, that client
+or server will be able to define which Data Protocol it prefers to use and it will be applied
+accordingly.
+*/
+
 using System;
 using System.Text;
 using System.Linq;
@@ -12,6 +24,7 @@ namespace Server.Sockets.Client {
     sealed class ClientWS : SocketClient {
         static private ulong counter = 0;
 
+        // Constructor
         public ClientWS(Socket socket) {
             this.id = ++counter;
 
@@ -22,6 +35,9 @@ namespace Server.Sockets.Client {
             Log.Add("client[" + this.id + "] connected (" + this.socket.RemoteEndPoint.ToString() + ")");
         }
 
+        // Start Client
+        // Tryes to go through Handshake, if success
+        // sends welcome message and start receiving messages.
         public override bool Start() {
             bool success = this.Handshake();
             if(success) {
@@ -37,6 +53,7 @@ namespace Server.Sockets.Client {
             }
         }
 
+        // Stop Client
         public override void Stop() {
             if(!this.stopped) {
                 this.stopped = true;
@@ -54,6 +71,7 @@ namespace Server.Sockets.Client {
             }
         }
 
+        // Event handler that triggers when client is stopped
         public override event Handler Stopped;
 
         private void OnStop() {
@@ -78,6 +96,9 @@ namespace Server.Sockets.Client {
             }
         }
 
+        // Operation method to handle handshake process
+        // It uses Handshake Parser to get protocol version
+        // and use it to generate handshake response message
         private bool Handshake() {
             bool result = false;
 
@@ -133,6 +154,7 @@ namespace Server.Sockets.Client {
             return result;
         }
 
+        // Start asynchronous receiving binary data
         private void StartReceive() {
             Log.Add("client[" + this.id + "] started");
             try {
@@ -158,6 +180,7 @@ namespace Server.Sockets.Client {
             }
         }
 
+        // Force blocking receive of specific amount of bytes
         public override byte[] Receive(int length) {
             try {
                 SocketError error = SocketError.Fault;
@@ -184,6 +207,9 @@ namespace Server.Sockets.Client {
             return null;
         }
 
+        // When data received parse data using extra transport protocol
+        // in this case it is always WebSockets so it handles rest of
+        // functionality like pinging and closing packet
         private void OnReceive(IAsyncResult result) {
             IPacket packet = null;
 
@@ -256,6 +282,9 @@ namespace Server.Sockets.Client {
             }
         }
 
+        // Process packet will deserialize data from binary to DataPacket
+        // based on selected Data Protocol
+        // And will trigger subscribed event methods to process packets logic
         private void ProcessPacket(IPacket packet) {
             ThreadPool.QueueUserWorkItem(new WaitCallback(Worker), packet);
         }
@@ -266,19 +295,23 @@ namespace Server.Sockets.Client {
                 dataPacket.TriggerEvents(this);
             }
         }
-  
+        
+        // Send data using thread from pool
         public override void SendAsync(DataPacket packet) {
             if (packet != null) {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(SendAsync), packet);
             }
         }
         
+        // Callback for sending in thread from pool
         private void SendAsync(object data) {
             if (data != null) {
                 this.Send((DataPacket)data);
             }
         }
         
+        // Blocking sending of data
+        // It serializes packet into binary based on selected Data Protocol
         public override void Send(DataPacket packet) {
             try {
                 if (packet != null) {
