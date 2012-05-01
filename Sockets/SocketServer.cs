@@ -61,7 +61,7 @@ namespace Server.Sockets.Server {
                 SocketClient client = null;
                 lock(this.locker) {
                     if(this.socket != null && this.socket.IsBound) {
-                        Log.Add("server accepting");
+                        //Log.Add("server accepting");
                         client = new ClientWS(this.socket.EndAccept(result));
                     }
                 }

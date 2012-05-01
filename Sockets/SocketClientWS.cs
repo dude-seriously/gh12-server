@@ -31,8 +31,9 @@ namespace Server.Sockets.Client {
             this.socket = socket;
             this.socket.NoDelay = true;
             this.socket.ReceiveTimeout = 1024;
-
-            Log.Add("client[" + this.id + "] connected (" + this.socket.RemoteEndPoint.ToString() + ")");
+   
+            Log.Add("client[" + this.id + "] connecting (" + this.socket.RemoteEndPoint.ToString() + ")");
+            //Log.Add("client[" + this.id + "] connected (" + this.socket.RemoteEndPoint.ToString() + ")");
         }
 
         // Start Client
@@ -56,6 +57,7 @@ namespace Server.Sockets.Client {
         // Stop Client
         public override void Stop() {
             if(!this.stopped) {
+                Log.Add("client[" + this.id + "] stopping");
                 this.stopped = true;
 
                 lock(this.locker) {
@@ -132,6 +134,7 @@ namespace Server.Sockets.Client {
                             }
                         }
                         if(stop) {
+                            Log.Add("client[" + this.id + "] stopping (Handshake)");
                             this.Stop();
                         }
 
@@ -156,7 +159,8 @@ namespace Server.Sockets.Client {
 
         // Start asynchronous receiving binary data
         private void StartReceive() {
-            Log.Add("client[" + this.id + "] started");
+            Log.Add("client[" + this.id + "] connected");
+            //Log.Add("client[" + this.id + "] started");
             try {
                 SocketError error = SocketError.Fault;
 
@@ -169,6 +173,7 @@ namespace Server.Sockets.Client {
                     }
                 }
                 if(stop) {
+                    Log.Add("client[" + this.id + "] stopping (StartReveice)");
                     this.Stop();
                 }
 
@@ -199,6 +204,7 @@ namespace Server.Sockets.Client {
                 if(!stop && error == SocketError.Success /*&& read == length*/) {
                     return buffer;
                 } else {
+                    Log.Add("client[" + this.id + "] stopping (Receive)");
                     this.Stop();
                 }
             } catch(SocketException exception) {
@@ -242,7 +248,7 @@ namespace Server.Sockets.Client {
                                     }
                                     break;
                                 case OpCode.Close:
-                                    Log.Add("client[" + this.id + "] closing code: " + ((WSPacket)packet).CloseCode.ToString());
+                                    //Log.Add("client[" + this.id + "] closing code: " + ((WSPacket)packet).CloseCode.ToString());
                                     stop = true;
                                     break;
                                 default:
@@ -255,6 +261,7 @@ namespace Server.Sockets.Client {
                     }
                 }
                 if(stop) {
+                    Log.Add("client[" + this.id + "] stopping (OnReceive 1)");
                     this.Stop();
                 }
             } catch(SocketException exception) {
@@ -272,6 +279,7 @@ namespace Server.Sockets.Client {
                         }
                     }
                     if(stop) {
+                        Log.Add("client[" + this.id + "] stopping (OnReceive 2)");
                         this.Stop();
                     }
 
@@ -331,6 +339,7 @@ namespace Server.Sockets.Client {
                         }
                     }
                     if(stop || error != SocketError.Success /*|| send != binary.Length*/) {
+                        Log.Add("client[" + this.id + "] stopping (Send)");
                         this.Stop();
                     }
                 }
