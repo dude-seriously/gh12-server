@@ -60,7 +60,7 @@ namespace Server.Sockets.Client {
                 Log.Add("client[" + this.id + "] stopping");
                 this.stopped = true;
 
-                lock(this.locker) {
+                //lock(this.locker) {
                     if(this.socket != null) {
                         if(this.socket.Connected) {
                             this.socket.Shutdown(SocketShutdown.Both);
@@ -69,7 +69,7 @@ namespace Server.Sockets.Client {
                     } else {
                         this.OnStop();
                     }
-                }
+                //}
             }
         }
 
@@ -84,7 +84,7 @@ namespace Server.Sockets.Client {
         }
 
         private void OnDisconnect(IAsyncResult result) {
-            lock(this.locker) {
+            //lock(this.locker) {
                 this.OnStop();
 
                 if(this.socket != null) {
@@ -95,7 +95,7 @@ namespace Server.Sockets.Client {
 
                     Log.Add("client[" + this.id + "] disconnected");
                 }
-            }
+            //}
         }
 
         // Operation method to handle handshake process
@@ -110,11 +110,11 @@ namespace Server.Sockets.Client {
                 int read = 0;
                 byte[] buffer = new byte[1024];
 
-                lock(this.locker) {
+                //lock(this.locker) {
                     if(this.socket != null && this.socket.Connected) {
                         read = this.socket.Receive(buffer, 0, 1024, SocketFlags.None, out error);
                     }
-                }
+                //}
 
                 if(error == SocketError.Success) {
                     WSHandshakeParser handshake = new WSHandshakeParser(buffer.Take(read).ToArray());
@@ -125,16 +125,16 @@ namespace Server.Sockets.Client {
                         error = SocketError.Fault;
 
                         bool stop = false;
-                        lock(this.locker) {
+                        //lock(this.locker) {
                             if(this.socket != null && this.socket.Connected) {
                                 this.socket.Send(responseBytes, 0, responseBytes.Length, SocketFlags.None, out error);
                                 result = true;
                             } else {
                                 stop = true;
                             }
-                        }
+                        //}
                         if(stop) {
-                            Log.Add("client[" + this.id + "] stopping (Handshake)");
+                            Log.Add("client[" + this.id + "] Handshake, stop");
                             this.Stop();
                         }
 
@@ -165,15 +165,15 @@ namespace Server.Sockets.Client {
                 SocketError error = SocketError.Fault;
 
                 bool stop = false;
-                lock(this.locker) {
+                //lock(this.locker) {
                     if(this.socket != null && this.socket.Connected) {
                         this.socket.BeginReceive(this.buffer, 0, this.buffer.Length, SocketFlags.None, out error, OnReceive, null);
                     } else {
                         stop = true;
                     }
-                }
+                //}
                 if(stop) {
-                    Log.Add("client[" + this.id + "] stopping (StartReveice)");
+                    Log.Add("client[" + this.id + "] StartReceive, stop");
                     this.Stop();
                 }
 
@@ -193,18 +193,18 @@ namespace Server.Sockets.Client {
                 byte[] buffer = new byte[length];
 
                 bool stop = false;
-                lock(this.locker) {
+                //lock(this.locker) {
                     if(this.socket != null && this.socket.Connected) {
                         read = this.socket.Receive(buffer, 0, length, SocketFlags.None, out error);
                     } else {
                         stop = true;
                     }
-                }
+                //}
 
-                if(!stop && error == SocketError.Success /*&& read == length*/) {
+                if(!stop && error == SocketError.Success && read == length) {
                     return buffer;
                 } else {
-                    Log.Add("client[" + this.id + "] stopping (Receive)");
+                    Log.Add("client[" + this.id + "] Receive, stop");
                     this.Stop();
                 }
             } catch(SocketException exception) {
@@ -222,7 +222,7 @@ namespace Server.Sockets.Client {
             try {
                 bool stop = false;
 
-                lock(this.locker) {
+                //lock(this.locker) {
                     SocketError error = SocketError.Fault;
                     int read = 0;
 
@@ -252,6 +252,7 @@ namespace Server.Sockets.Client {
                                     stop = true;
                                     break;
                                 default:
+                                    Log.Add("client[" + this.id + "] OnReceive, unknown OpCode " + ((WSPacket)packet).OpCode.ToString());
                                     stop = true;
                                     break;
                             }
@@ -259,9 +260,9 @@ namespace Server.Sockets.Client {
                     } else {
                         stop = true;
                     }
-                }
+                //}
                 if(stop) {
-                    Log.Add("client[" + this.id + "] stopping (OnReceive 1)");
+                    Log.Add("client[" + this.id + "] OnReceive, stop a");
                     this.Stop();
                 }
             } catch(SocketException exception) {
@@ -271,15 +272,15 @@ namespace Server.Sockets.Client {
                     SocketError error = SocketError.Fault;
 
                     bool stop = false;
-                    lock(this.locker) {
+                    //lock(this.locker) {
                         if(this.socket != null && this.socket.Connected) {
                             this.socket.BeginReceive(this.buffer, 0, this.buffer.Length, SocketFlags.None, out error, OnReceive, null);
                         } else {
                             stop = true;
                         }
-                    }
+                    //}
                     if(stop) {
-                        Log.Add("client[" + this.id + "] stopping (OnReceive 2)");
+                        Log.Add("client[" + this.id + "] OnReceive, stop b");
                         this.Stop();
                     }
 
@@ -331,15 +332,15 @@ namespace Server.Sockets.Client {
                     int send = 0;
     
                     bool stop = false;
-                    lock(this.locker) {
+                    //lock(this.locker) {
                         if(this.socket != null && this.socket.Connected) {
                             send = this.socket.Send(binary, 0, binary.Length, SocketFlags.None, out error);
                         } else {
                             stop = true;
                         }
-                    }
-                    if(stop || error != SocketError.Success /*|| send != binary.Length*/) {
-                        Log.Add("client[" + this.id + "] stopping (Send)");
+                    //}
+                    if(stop || error != SocketError.Success || send != binary.Length) {
+                        Log.Add("client[" + this.id + "] Send, stop");
                         this.Stop();
                     }
                 }

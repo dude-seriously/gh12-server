@@ -47,7 +47,8 @@ namespace Server.Sockets.Client {
 
         public virtual void Ping() {
             if(this.socket == null || !this.socket.Connected || !this.socket.IsConnected()) {
-                this.Stop();
+                Log.Add("client[" + this.id + "] Ping, stop a");
+                //this.Stop();
             } else {
                 if(!this.pong) {
                     this.latency = -1;
@@ -70,6 +71,7 @@ namespace Server.Sockets.Client {
                         }
                     }
                     if(stop || error != SocketError.Success || send != binary.Length) {
+                        Log.Add("client[" + this.id + "] Ping, stop b");
                         this.Stop();
                     }
                 } catch(SocketException exception) {
