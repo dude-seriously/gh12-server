@@ -343,6 +343,8 @@ namespace Server.Sockets.Client {
                         Log.Add("client[" + this.id + "] Send, stop");
                         this.Stop();
                     }
+
+                    packet.FinishTracker();
                 }
             } catch(SocketException exception) {
                 Log.Add("client[" + this.id + "] Send exception: " + exception.ToString());

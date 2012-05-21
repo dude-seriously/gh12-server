@@ -59,8 +59,11 @@ namespace Server.Packets {
     public sealed class DataPacket {
         private PacketType packet;
         private Dictionary<PacketField, FieldData> container;
+        private Tracker tracker;
 
         public DataPacket(PacketType packet) {
+            this.tracker = new Tracker();
+
             this.packet = packet;
 
             this.container = new Dictionary<PacketField, FieldData>();
@@ -112,6 +115,12 @@ namespace Server.Packets {
 
         public void TriggerEvents(SocketClient client) {
             this.packet.Trigger(client, this);
+        }
+
+        public void FinishTracker() {
+            this.tracker.Stop();
+
+            Log.Add("track packet: c[" + this.tracker.Count + "] e[" + this.tracker.ElapsedMilliseconds + "]");
         }
     }
 }

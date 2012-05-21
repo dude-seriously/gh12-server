@@ -16,8 +16,6 @@ namespace Server {
         public Timer() {
             this.watch = new Stopwatch();
             this.elapsedCollection = new List<long>();
-            Log.Add("timer resolution: " + Stopwatch.IsHighResolution);
-            Log.Add("timer frequency: " + Stopwatch.Frequency);
         }
         
         public void Start() {
