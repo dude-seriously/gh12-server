@@ -75,6 +75,7 @@
     <Compile Include="Game\Packets\Input.cs" />
     <Compile Include="Game\GameObjects\Hero.cs" />
     <Compile Include="Game\Packets\Hero.cs" />
+    <Compile Include="Utils\Timer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

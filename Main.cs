@@ -4,15 +4,16 @@ using System.Threading;
 
 using System.Text;
 using Server.Game;
+using Server;
 
 namespace Server {
     class MainClass {
         public static void Main(string[] args) {
 
-            ServerInstance server = new ServerInstance();
+            new ServerInstance();
 
             while(true) {
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
         }
     }

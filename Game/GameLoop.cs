@@ -17,8 +17,18 @@ namespace Server.Game {
         private GameWorld world;
         private Map map;
 
+        private Timer timer;
+        private Timer timerSend;
+        private double averigeTimeLast;
+        private double averigeTimeSendLast;
+
         public GameLoop() {
             this.ups = 100;
+            this.timer = new Timer();
+            this.timer.Average = 1000;
+
+            this.timerSend = new Timer();
+            this.timerSend.Average = 1000;
         }
 
         public GameWorld World {
@@ -68,6 +78,8 @@ namespace Server.Game {
 /* TICK BEGIN */
                     lastTick = Time.Now;
                     GameObject.Time = lastTick;
+
+                    this.timer.Start();
  
                     ICollection<User> users = this.world.Users;
                     ICollection<GameObject> objects = this.world.Objects;
@@ -176,10 +188,24 @@ namespace Server.Game {
                         }
                     }
 
+                    timer.Stop();
+
+                    if (averigeTimeLast != this.timer.ElapsedMilliseconds) {
+                        averigeTimeLast = this.timer.ElapsedMilliseconds;
+                        Log.Add("cycle: " + averigeTimeLast);
+                    }
+
 /* TICK END */
                     ++iteration;
  
+                    this.timerSend.Start();
                     this.OnCycleEnd();
+                    this.timerSend.Stop();
+
+                    if (averigeTimeSendLast != this.timerSend.ElapsedMilliseconds) {
+                        averigeTimeSendLast = this.timerSend.ElapsedMilliseconds;
+                        Log.Add("cycle end: " + averigeTimeSendLast);
+                    }
                 }
             }
         }

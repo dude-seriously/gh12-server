@@ -1,5 +1,6 @@
 using System;
 using Server.Packets;
+using System.Collections.Generic;
 
 namespace Server.Game.Objects {
     public class Character : GameObjectMovable {
@@ -37,7 +38,7 @@ namespace Server.Game.Objects {
 
                     if(packet != null) {
                         packet["id"] = this.owner.ID;
-
+                        
                         packet["e"] = this.enabled.Value;
                         packet["s"] = this.speed.Value;
                         packet["x"] = this.x.Value;
